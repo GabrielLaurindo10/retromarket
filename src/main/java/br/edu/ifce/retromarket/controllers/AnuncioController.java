@@ -11,25 +11,34 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.edu.ifce.retromarket.entities.Completude;
 import br.edu.ifce.retromarket.repositories.CompletudeRepository;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping(value = "/anuncios")
 public class AnuncioController {
-
+    
     @Autowired
-  private CompletudeRepository repository;
+    private AnuncioService service;
 
   // Método para retornar a lista de
   @GetMapping("/completudes")
   public List<Completude> buscarCompletudes() {
-    return repository.findAll();
+    return service.buscarCompletudes();
   }
 
   @PostMapping("/completudes")
   public Completude criarCompletude(@RequestBody Completude completude) {
-    return repository.save(completude);
+    return service.criarCompletude(completude);
+  }
+
+@GetMapping
+public List<Anuncio> listarAnuncios() {
+    return service.listarAnuncios();
   }
 
 }
 
-}
+
+
+
