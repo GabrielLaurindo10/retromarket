@@ -3,12 +3,16 @@ package br.edu.ifce.retromarket.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.edu.ifce.retromarket.dtos.AnuncioResponseDTO;
 import br.edu.ifce.retromarket.entities.Completude;
 import br.edu.ifce.retromarket.repositories.CompletudeRepository;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,8 +37,28 @@ public class AnuncioController {
   }
 
 @GetMapping
-public List<Anuncio> listarAnuncios() {
-    return service.listarAnuncios();
+public Page<AnuncioResponseDTO> listarAnuncios(Pageable pageable) {
+    return service.listarAnuncios(pageable);
+  }
+
+  @GetMapping("/{id}")
+  public AnuncioResponseDTO buscarAnuncioPorId(@PathVariable Long id) {
+    AnuncioDetalhesDTO anuncio = service.buscarPorId(id); 
+    return ResponseEntity.ok(anuncio);
+  }
+
+  @PostMapping 
+  public ResponseEntity<AnuncioDetalhesDTO> criarAnuncio( @Valid @RequestBody  AnuncioRequestDTO anuncioDTO){
+    AnuncioDetalhesDTO anuncioCriado = service.criarAnuncio(anuncioDTO);
+    return ResponseEntity.status(HttpStatus.CREATED).body(anuncioCriado);
+
+  }
+  
+  @PutMapping("/{id}") 
+  public ResponseEntity<AnuncioDetalhesDTO> atualizarAnuncio(@RequestBody AnuncioRequestDTO anuncioDTO
+    @PathVariable Long id) {
+    AnuncioDetalhesDTO anuncioAtualizado = service.atualizarAnuncio(AnuncioDTO, id);
+    return ResponseEntity.status(HttpStatus.OK). body(anuncioCriado);
   }
 
 }
